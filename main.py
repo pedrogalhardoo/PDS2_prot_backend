@@ -17,7 +17,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "lala"}
+    return {"Hello": "lalalalalalalalalalala"}
 
 # @app.post("/criar")
 # def criar_valores(res: dict = Body(...)):
