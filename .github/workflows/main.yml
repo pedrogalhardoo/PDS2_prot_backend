@@ -24,11 +24,10 @@ jobs:
           --health-retries=5
 
     env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pedro
-      POSTGRES_DB: pdsi2_prot
-      POSTGRES_HOST: localhost  # Muito importante
-      DATABASE_URL: postgresql://postgres:pedro@localhost/pdsi2_prot
+      DB_USER: postgres
+      DB_PASSWORD: pedro
+      DB_NAME: pdsi2_prot
+      DB_HOST: localhost
 
     steps:
       - name: pulling git repo
@@ -46,7 +45,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Esperar o PostgreSQL iniciar
-        run: sleep 10  # Pode ajustar o tempo se necessário
+        run: sleep 10
 
       - name: Executar pytest
         run: pytest teste.py
