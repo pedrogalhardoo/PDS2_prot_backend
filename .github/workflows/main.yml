@@ -41,8 +41,11 @@ jobs:
       - name: Atualizar pip
         run: python -m pip install --upgrade pip
 
-      - name: Instalar dependências
+      - name: Instalar dependências do projeto
         run: pip install -r requirements.txt
+
+      - name: Instalar cliente PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Verificar se os secrets estão disponíveis
         run: |
@@ -51,9 +54,6 @@ jobs:
           [[ -z "$DB_PASSWORD" ]] && echo "❌ DB_PASSWORD está vazio" || echo "✅ DB_PASSWORD OK"
           [[ -z "$DB_NAME" ]] && echo "❌ DB_NAME está vazio" || echo "✅ DB_NAME OK"
           [[ -z "$DB_HOST" ]] && echo "❌ DB_HOST está vazio" || echo "✅ DB_HOST OK"
-
-      - name: Instalar cliente PostgreSQL
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Aguardar PostgreSQL ficar pronto
         run: |
@@ -65,3 +65,7 @@ jobs:
 
       - name: Executar os testes com pytest
         run: pytest teste.py
+
+      - name: Exibir logs do PostgreSQL (debug)
+        if: always()
+        run: docker logs $(docker ps -q --filter ancestor=postgres:13)
