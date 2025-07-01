@@ -6,7 +6,12 @@ import model
 from database import engine, get_db
 from sqlalchemy.orm import Session
 
-model.Base.metadata.create_all(bind=engine)
+def init_db():
+    model.Base.metadata.create_all(bind=engine)
+
+# e só execute isso manualmente, por exemplo:
+if __name__ == "__main__":
+    init_db()
 
 app = FastAPI()
 
