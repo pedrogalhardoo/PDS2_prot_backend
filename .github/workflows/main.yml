@@ -7,7 +7,29 @@ on:
 jobs:
   job1:
     runs-on: ubuntu-latest
-    
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: pedro
+          POSTGRES_DB: pdsi2_prot
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pedro
+      POSTGRES_DB: pdsi2_prot
+      POSTGRES_HOST: localhost  # Muito importante
+      DATABASE_URL: postgresql://postgres:pedro@localhost/pdsi2_prot
+
     steps:
       - name: pulling git repo
         uses: actions/checkout@v2
@@ -22,6 +44,9 @@ jobs:
 
       - name: instalar dependencias
         run: pip install -r requirements.txt
+
+      - name: Esperar o PostgreSQL iniciar
+        run: sleep 10  # Pode ajustar o tempo se necessário
 
       - name: Executar pytest
         run: pytest teste.py
