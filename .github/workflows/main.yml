@@ -41,6 +41,14 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
+      - name: Verificar se os secrets estão disponíveis
+        run: |
+          echo "Verificando secrets..."
+          [[ -z "$DB_USER" ]] && echo "❌ DB_USER está vazio" || echo "✅ DB_USER OK"
+          [[ -z "$DB_PASSWORD" ]] && echo "❌ DB_PASSWORD está vazio" || echo "✅ DB_PASSWORD OK"
+          [[ -z "$DB_NAME" ]] && echo "❌ DB_NAME está vazio" || echo "✅ DB_NAME OK"
+          [[ -z "$DB_HOST" ]] && echo "❌ DB_HOST está vazio" || echo "✅ DB_HOST OK"
+
       - name: Instalar cliente PostgreSQL
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
