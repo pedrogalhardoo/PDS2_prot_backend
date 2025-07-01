@@ -21,7 +21,7 @@ jobs:
           --health-cmd="pg_isready"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     env:
       DB_USER: ${{ secrets.DB_USER }}
@@ -45,7 +45,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Esperar o PostgreSQL iniciar
-        run: sleep 10
+        run: sleep 15
 
       - name: Executar pytest
         run: pytest teste.py
