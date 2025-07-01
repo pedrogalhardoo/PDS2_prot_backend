@@ -1,8 +1,8 @@
 name: Build and Deploy
 
 on:
-  push:
-  pull_request:
+  - push
+  - pull_request
 
 jobs:
   job1:
@@ -12,33 +12,41 @@ jobs:
       postgres:
         image: postgres:13
         env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: pedro
+          POSTGRES_DB: pdsi2_prot
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pedro
+      POSTGRES_DB: pdsi2_prot
+      POSTGRES_HOST: localhost  # Muito importante
+      DATABASE_URL: postgresql://postgres:pedro@localhost/pdsi2_prot
 
     steps:
-      - name: Pulling git repo
+      - name: pulling git repo
         uses: actions/checkout@v2
 
-      - name: Instalando o Python
+      - name: instalando o python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.11"
+          python-version: "3.13.3"
 
-      - name: Atualizando o pip
+      - name: update pip
         run: python -m pip install --upgrade pip
 
-      - name: Instalando dependências
+      - name: instalar dependencias
         run: pip install -r requirements.txt
 
+      - name: Esperar o PostgreSQL iniciar
+        run: sleep 10  # Pode ajustar o tempo se necessário
+
       - name: Executar pytest
-        env:
-          DATABASE_URL: postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.POSTGRES_DB }}
         run: pytest teste.py
