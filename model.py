@@ -17,3 +17,4 @@ class UFUMenu(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     titulo = Column(String, nullable=False)
     link = Column(String, nullable=False, unique=True)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), nullable=False)
