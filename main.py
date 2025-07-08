@@ -5,13 +5,13 @@ import classes
 import model
 from database import engine, get_db
 from sqlalchemy.orm import Session
+from scraping import scrape_ufu
+from model import UFUMenu
 
 def init_db():
     model.Base.metadata.create_all(bind=engine)
 
-# e só execute isso manualmente, por exemplo:
-if __name__ == "__main__":
-    init_db()
+init_db()
 
 app = FastAPI()
 
@@ -46,3 +46,7 @@ def criar_valores (nova_mensagem: classes.Mensagem, db: Session = Depends (get_d
 def square(num: int):
     return num ** 2
 
+@app.post("/scrape", status_code=201)
+def executar_scraping(db: Session = Depends(get_db)):
+    dados_inseridos = scrape_ufu(db)
+    return {"dados_salvos": dados_inseridos}
